@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace d'administration{% endblock %}
+
+{% block body %}
+
+<center>
+<h1 class="alert alert-info">Espace d'administration</h1>
+
+<h3>Vous pouvez créer/modifier/supprimer les différentes informations</h3>
+
+<div class="row">
+  <div class="col-md-2">
+    <a href="/adminAgent">Agent</a>
+  </div>
+  <div class="col-md-2">
+    <a href="#">Mission</a>
+  </div>
+  <div class="col-md-2">
+    <a href="#">Cible</a>
+  </div>
+  <div class="col-md-2">
+    <a href="#">Planque</a>
+  </div>
+  <div class="col-md-2">
+    <a href="/adminContact">Contact</a>
+  </div>
+  <div class="col-md-2">
+    <a href="/adminSpécialité">Spécialité</a>
+  </div>
+</div>
+
+</center>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Missions Disponible !{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="col-xs mx-auto  w-75">
+  <center>
+  <table id="mission" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th>Mission</th>
+        <th>Agent</th>
+        <th>Cible</th>
+        <th>Contact</th>
+        <th>Planque</th>
+        <th>Statut</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for missions in mission %}
+      <tr>
+        <td>{{ missions.NomDeCode }}</td>
+        <td>{{ missions.Agent.CodeIdentification }}</td>
+        <td>{{ missions.IdCible.NomDeCode }}</td>
+        <td>{{ missions.IdContact.NomDeCode }}</td>
+        <td>{{ missions.IdPlanque.Code }}</td>
+        <td>{{ missions.IdStatut.Description }}</td>
+        <td>
+          <form class="ajax" action="{{ path('mission_show', { 'id': missions.Id }) }}" method="post" >
+          <input type="submit" value="Consulter">
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    <tbody>
+    <tfoot>
+      <tr>
+        <th>Mission</th>
+        <th>Agent</th>
+        <th>Cible</th>
+        <th>Contact</th>
+        <th>Planque</th>
+        <th>Statut</th>
+        <th>Action</th>
+      </tr>
+    </tfoot>
+    </table>
+    </center>
+  </div>
+</div>
+  <script>
+    $(document).ready(function() {
+      $('#mission').DataTable();
+  } );
+  </script>
+
+{% endblock %}

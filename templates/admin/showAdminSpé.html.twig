@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace d'administration{% endblock %}
+
+{% block body %}
+
+<div class="modal" tabindex="-1" id="modal_edit_spe" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Editer une spécialité</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_edit_spe" method="post">
+          <div class="form-group">
+            <label for="spe_edit_id">Id :</label>
+            <input type="text" class="form-control" name="spe_edit_id" id="spe_edit_id" value="" disabled>
+          </div>
+          <div class="form-group">
+            <label for="spe_edit_desc">Description :</label>
+            <input type="text" class="form-control" name="spe_edit_desc" id="spe_edit_desc" value="">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="edit_spe" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="modal_delete_spe" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Supprimer une spécialité</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_delete_spe" method="post">
+          <div class="form-group">
+            <label for="spe_delete_id">Id :</label>
+            <input type="text" class="form-control" name="spe_delete_id" id="spe_delete_id" value="" disabled>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete_spe" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="modal_cre_spe" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Créer une nouvelle spécialité</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_cre_spe" method="post">
+          <div class="form-group">
+            <label for="spe_cre_desc">Description :</label>
+            <input type="text" class="form-control" name="spe_cre_desc" id="spe_cre_desc" value="">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cre_spe" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="create_spe" class="btn btn-success" data-toggle="modal" data-target="#modal_cre_spe">Créer une spécialité</button>
+
+<table id="Spécialité" class="display" style="width:100%">
+        <thead>
+            <tr>
+              <th>Id</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="data">
+
+        </tbody>
+        <tfoot>
+            <tr>
+              <th>Id</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+        </tfoot>
+</table>
+
+<script type="text/javascript">
+
+$(function() {
+
+var table = $('#Spécialité').DataTable({
+  "ajax": {
+    "url": "show_spe",
+    "method": "GET",
+    "dataSrc": ""
+    },
+    "columns": [
+      { "data": "id"},
+      { "data": "description"},
+        {
+          data: 'id',
+          render: function(data)
+          {
+           return '<button type="button" class="btn btn-warning" onclick="modalEdit('+data+')" name="edit" id="edit'+data+'">Editer</button>&nbsp;&nbsp;<button class="btn btn-danger" type="button" onclick="modalDelete('+data+')" name="delete" id="delete'+data+'">Supprimer</button> ';
+          }
+        }
+      ],
+    "order": [[1, "asc"]]
+});
+
+$("#cre_spe").click(function(){
+  $.ajax({
+  method: "POST",
+  url: "/create_spe",
+  data: { description: $("#spe_cre_desc").val() }
+  })
+  .done(function( msg ) {
+    alert("La description à bien été ajouté !");
+    $('#modal_cre_spe').modal('toggle');
+    table.ajax.reload();
+  });
+});
+
+$("#edit_spe").click(function(){
+  var id = $("#spe_edit_id").val();
+  $.ajax({
+  method: "POST",
+  url: "/edit_spe/"+id+"",
+  data: { description: $("#spe_edit_desc").val(),id: $("#spe_edit_id").val() }
+  })
+  .done(function( msg ) {
+    alert("La description à bien été modifié !");
+    $('#modal_edit_spe').modal('toggle');
+    table.ajax.reload();
+  });
+});
+
+$("#delete_spe").click(function(){
+  var id = $("#spe_delete_id").val();
+  $.ajax({
+  method: "POST",
+  url: "/delete_spe/"+id+"",
+  data: { id: $("#spe_edit_id").val() }
+  })
+  .done(function( msg ) {
+    alert("La description à bien été supprimé !");
+    $('#modal_delete_spe').modal('toggle');
+    table.ajax.reload();
+  });
+});
+
+});
+</script>
+
+<script type="text/javascript">
+
+  function modalEdit(data) {
+    $('#modal_edit_spe').modal('toggle');
+    $('#spe_edit_id').val(data);
+  }
+
+  function modalDelete(data) {
+    $('#modal_delete_spe').modal('toggle');
+    $('#spe_delete_id').val(data);
+  }
+
+</script>
+
+{% endblock %}

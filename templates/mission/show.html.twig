@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail sur la misson{% endblock %}
+
+{% block body %}
+<center>
+{% for missions in mission %}
+
+<h1>Détail sur la misson "{{missions.NomDeCode}}"</h1>
+
+<h2>{{missions.titre}}</h2>
+
+Détails :
+
+<div class="row">
+  <div class="">
+    Description
+  </div>
+
+  <div class="">
+    {{missions.Description}}
+  </div>
+</div>
+
+
+{% endfor %}
+</center>
+{% endblock %}

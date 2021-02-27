@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace d'administration{% endblock %}
+
+{% block body %}
+
+<button type="button" id="create_con" class="btn btn-success" data-toggle="modal" data-target="#modal_cre_con">Créer un contact</button>
+
+<div class="modal" id="modal_cre_con">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Créer un nouveau contact</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_cre_spe" method="post">
+          <div class="form-group">
+          <label for="con_cre_nom">Nom :</label>
+          <input type="text" class="form-control" name="con_cre_nom" id="con_cre_nom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_prenom">Prénom :</label>
+          <input type="text" class="form-control" name="con_cre_prenom" id="con_cre_prenom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_dtn">Date de naissance :</label>
+          <input type="date" class="form-control" name="con_cre_dtn" id="con_cre_dtn" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_ndc">Nom de code :</label>
+          <input type="text" class="form-control" name="con_cre_ndc" id="con_cre_ndc" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_nationalite">Nationalité :</label>
+          <input type="text" class="form-control" name="con_cre_nationalite" id="con_cre_nationalite" value=""><br>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cre_con" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal_cre_con">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Créer un nouveau contact</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_cre_spe" method="post">
+          <div class="form-group">
+          <label for="con_cre_nom">Nom :</label>
+          <input type="text" class="form-control" name="con_cre_nom" id="con_cre_nom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_prenom">Prénom :</label>
+          <input type="text" class="form-control" name="con_cre_prenom" id="con_cre_prenom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_dtn">Date de naissance :</label>
+          <input type="date" class="form-control" name="con_cre_dtn" id="con_cre_dtn" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_ndc">Nom de code :</label>
+          <input type="text" class="form-control" name="con_cre_ndc" id="con_cre_ndc" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_nationalite">Nationalité :</label>
+          <input type="text" class="form-control" name="con_cre_nationalite" id="con_cre_nationalite" value=""><br>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cre_con" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table id="Contact" class="display" style="width:100%">
+        <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Nom de code</th>
+              <th>Nationalté</th>
+              <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="data">
+
+        </tbody>
+        <tfoot>
+            <tr>
+              <th>Id</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Nom de code</th>
+              <th>Nationalté</th>
+              <th>Action</th>
+            </tr>
+        </tfoot>
+</table>
+<script type="text/javascript">
+
+$(function() {
+  $("#cre_con").click(function(){
+    $.ajax({
+    method: "POST",
+    url: "/create_con",
+    data: {
+      nom: $("#con_cre_nom").val(),
+      prenom: $("#con_cre_prenom").val(),
+      date_de_naissance: $("#con_cre_dtn").val(),
+      nom_de_code: $("#con_cre_ndc").val(),
+      nationalite: $("#con_cre_nationalite").val(),
+    },
+    success: function (data) { successFunction(data); },
+    error: function (jqXHR, textStatus, errorThrown) { errorFunction(); }
+    })
+  });
+  });
+
+  var table = $('#Contact').DataTable({
+    "ajax": {
+      "url": "show_con",
+      "method": "GET",
+      "dataSrc": ""
+      },
+      "columns": [
+        { "data": "id"},
+        { "data": "prenom"},
+        { "data": "prenom"},
+        { "data": "nom_de_code"},
+        { "data": "nationalite"},
+          {
+            data: 'id',
+            render: function(data)
+            {
+             return '<button type="button" class="btn btn-warning" onclick="modalEdit('+data+')" name="edit" id="edit'+data+'">Editer</button>&nbsp;&nbsp;<button class="btn btn-danger" type="button" onclick="modalDelete('+data+')" name="delete" id="delete'+data+'">Supprimer</button> ';
+            }
+          }
+        ],
+      "order": [[1, "asc"]]
+  });
+
+</script>
+
+{% endblock %}

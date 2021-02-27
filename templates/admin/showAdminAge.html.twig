@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace d'administration{% endblock %}
+
+{% block body %}
+
+<div class="modal" id="modal_cre_age">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Créer un nouveau agent</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_cre_spe" method="post">
+          <div class="form-group">
+          <label for="con_cre_nom">Nom :</label>
+          <input type="text" class="form-control" name="age_cre_nom" id="age_cre_nom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_prenom">Prénom :</label>
+          <input type="text" class="form-control" name="age_cre_prenom" id="age_cre_prenom" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_dtn">Date de naissance :</label>
+          <input type="date" class="form-control" name="age_cre_dtn" id="age_cre_dtn" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_ndc">Code d'identification :</label>
+          <input type="text" class="form-control" name="age_cre_ndi" id="age_cre_ndi" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_nationalite">Nationalité :</label>
+          <input type="text" class="form-control" name="age_cre_nationalite" id="age_cre_nationalite" value=""><br>
+          </div>
+          <div class="form-group">
+          <label for="con_cre_spe">Spécialité :</label>
+          <select class="form_group" name="con_cre_spe" id="con_cre_spe">
+             <option value="">......</option>
+          </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cre_age" class="btn btn-primary">Envoyer</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="create_age" class="btn btn-success" data-toggle="modal" data-target="#modal_cre_age">Créer un Agent</button>
+
+<script type="text/javascript">
+
+$(function() {
+
+  $.ajax( "/show_age" )
+    .done(function(resp) {
+      let string = JSON.stringify(resp);
+      let obj = JSON.parse(string);
+      $.each( obj, function( key, value )
+      {
+        $('#con_cre_spe').append('<option value="'+obj[key]["id_specialite"]+'">'+obj[key]["description"]+'</option>');
+      });
+    })
+    .fail(function() {
+      alert( "error" );
+    })
+
+  $("#cre_age").click(function(){
+    $.ajax({
+    method: "POST",
+    url: "/create_age",
+    data: {
+      nom: $("#age_cre_nom").val(),
+      prenom: $("#age_cre_prenom").val(),
+      date_de_naissance: $("#age_cre_dtn").val(),
+      code_identification: $("#age_cre_ndi").val(),
+      nationalite: $("#age_cre_nationalite").val(),
+      specialite : $("#con_cre_spe").val(),
+    }
+
+  });
+  });
+
+    });
+
+</script>
+
+{% endblock %}
